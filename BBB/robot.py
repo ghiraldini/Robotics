@@ -12,9 +12,10 @@ def main():
 	time.sleep(1)
 
 	r.cleanUp()
+	r.initBotPin()
 	r.initHR_SC04()
 	r.initMotor()
-	r.testMotors()
+	#r.testMotors()
 
 	time.sleep(2)
 	

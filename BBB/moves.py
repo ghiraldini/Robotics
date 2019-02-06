@@ -88,12 +88,12 @@ class BotMoves:
 	def initHR_SC04(self):
 		print "Initializing HR-SC04 sensor..."
 		ADC.setup()	
-		time.sleep(0.5)
+		time.sleep(0.25)
 		
 		DIO.setup(TRIG, DIO.OUT)
-		time.sleep(0.25)
+		time.sleep(0.1)
 		DIO.setup(ECHO, DIO.IN)
-		
+		time.sleep(0.1)
 		DIO.output(TRIG, DIO.LOW)	
 
 		return;
@@ -103,7 +103,7 @@ class BotMoves:
 	# ----------------------------------------------------------
 	def initMotor(self):
 		print "Initializing DG012-SV motors.."
-		time.sleep(0.5)
+		time.sleep(0.1)
 
 		DIO.setup(M1, DIO.OUT)
 		DIO.setup(M2, DIO.OUT)
@@ -124,7 +124,7 @@ class BotMoves:
 	# ----------------------------------------------------------
 	def initBotPin(self):
 		print "Registering bot switch..."
-		time.sleep(0.5)
+		time.sleep(0.1)
 		
 		DIO.setup(SWITCH, DIO.IN)
 		return;
@@ -132,7 +132,7 @@ class BotMoves:
 	# ----------------------------------------------------------
 	# Activate Sensor to calculate distance
 	# ----------------------------------------------------------
-	@staticmethod
+	#@staticmethod
 	def getDistance(self):
 		s = 0
 		start = 0
@@ -141,7 +141,8 @@ class BotMoves:
 		distSum = 0
 		i = 1
 		count = 4
-		timeout = 0.036
+		#timeout = 0.036
+		timeout = 0.05
 
 		
 		while i < count:
@@ -156,7 +157,7 @@ class BotMoves:
 			while DIO.input(ECHO)==0:
 				start = time.time()
 				if(start - s >= timeout):
-					reset()
+					self.reset()
 					return 0;
 
 			while DIO.input(ECHO)==1:
@@ -185,7 +186,7 @@ class BotMoves:
 	# ----------------------------------------------------------
 	# Sample AIN method
 	# ----------------------------------------------------------
-	@staticmethod
+	#@staticmethod
 	def getAIN(self):
 		start = time.time()
 		timer = True
@@ -209,7 +210,7 @@ class BotMoves:
 	# ----------------------------------------------------------
 	# Turn Bot right/left for X seconds (duration)
 	# ----------------------------------------------------------
-	@staticmethod
+	#@staticmethod
 	def survey(self, direction, duration):
 		start = time.time()
 		timer = True
@@ -218,12 +219,12 @@ class BotMoves:
 		MAX = -1000
 
 		if(direction == "RIGHT"):
-			moveRight()
+			self.moveRight()
 		else:
-			moveLeft()
+			self.moveLeft()
 		
 		while timer:
-			d = getDistance()
+			d = self.getDistance()
 			if(d > MAX):
 				MAX = d
 			t = time.time()
@@ -231,7 +232,7 @@ class BotMoves:
 			if(timeCount > elapsed):
 				timer = False
 				
-		stop()
+		self.stop()
 				
 		return MAX;
 
@@ -239,7 +240,7 @@ class BotMoves:
 	# ----------------------------------------------------------
 	#
 	# ----------------------------------------------------------
-	@staticmethod
+	#@staticmethod
 	def moveRight(self):
 		print("Turning Right")
 		# Forward Left Motor		
@@ -257,7 +258,7 @@ class BotMoves:
 	# ----------------------------------------------------------
 	#
 	# ----------------------------------------------------------
-	@staticmethod
+	#@staticmethod
 	def moveLeft(self):
 		print("Turning Left")
 		# Reverse Left Motor
@@ -274,7 +275,7 @@ class BotMoves:
 	# ----------------------------------------------------------
 	#
 	# ----------------------------------------------------------
-	@staticmethod
+	#@staticmethod
 	def goForward(self,dist):
 		if dist >= 100.0:
 			DC = 100
@@ -299,7 +300,7 @@ class BotMoves:
 	# ----------------------------------------------------------
 	#
 	# ----------------------------------------------------------
-	@staticmethod
+	#@staticmethod
 	def reverse(self):
 		print("Moving in Reverse")
 		# Left Motor Reverse
@@ -318,7 +319,7 @@ class BotMoves:
 	# ----------------------------------------------------------
 	#
 	# ----------------------------------------------------------	
-	@staticmethod
+	# @staticmethod
 	def stop(self):
 		print("Stopping")
 		PWM.set_duty_cycle(LMOT_PWM,0)
@@ -344,7 +345,7 @@ class BotMoves:
 	# ----------------------------------------------------------
 	#
 	# ----------------------------------------------------------
-	@staticmethod	
+	#@staticmethod	
 	def reset(self):
 		self.stop()
 		self.cleanUp()
